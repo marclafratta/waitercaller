@@ -6,7 +6,7 @@ DATABASE = "waitercaller"
 
 class DBHelper:
     def __init__(self):
-        client = pymongo.MongoClient
+        client = pymongo.MongoClient("mongodb+srv://appdb:7saMCY$V9wFWh^93@cluster0-qgfnl.mongodb.net")
         self.db = client[DATABASE]
 
     def get_user(self, email):
