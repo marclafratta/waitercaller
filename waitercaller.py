@@ -1,12 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user, LoginManager, login_required, login_user, logout_user
 from bitlyhelper import BitlyHelper
-from mockdbhelper import MockDBHelper as DBHelper
 from passwordhelper import PasswordHelper
 from user import User
 from forms import RegistrationForm, LoginForm, CreateTableForm, DeleteTableForm
 import config
 import datetime
+
+# Test DB or real db
+if config.test:
+    from mockdbhelper import MockDBHelper as DBHelper
+else:
+    from dbhelper import DBHelper
 
 application = Flask(__name__)
 application.secret_key = \
@@ -96,7 +101,7 @@ def account_createtable():
     form = CreateTableForm(request.form)
     if form.validate():
         tableid = DB.add_table(form.tablenumber.data, current_user.get_id())
-        new_url = BH.shorten_url(config.base_url + "newrequest/" + tableid)
+        new_url = config.base_url + "newrequest/" + str(tableid)
         DB.update_table(tableid, new_url)
         return redirect(url_for('account'))
 
